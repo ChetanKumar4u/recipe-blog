@@ -6,8 +6,10 @@ import theme from './styles/Theme';
 import { RecipeProvider } from './context/RecipeContext';
 import { UserProvider } from './context/UserContext';
 import { MessagingProvider } from './context/MessagingContext';
+import { BookmarkProvider } from './context/BookmarkContext';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import CustomHead from './components/common/CustomHead';
 
 // Pages
 import Home from './pages/Home';
@@ -71,96 +73,99 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
+      <CustomHead />
       <RecipeProvider>
         <UserProvider>
           <MessagingProvider>
-            <AppWrapper>
-              <AnimatedBackground>
-                <BackgroundGradient
-                  animate={{
-                    background: [
-                      'radial-gradient(circle at 20% 20%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
-                      'radial-gradient(circle at 80% 80%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
-                      'radial-gradient(circle at 80% 20%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
-                      'radial-gradient(circle at 20% 80%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
-                      'radial-gradient(circle at 20% 20%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
-                    ],
-                  }}
-                  transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                />
+            <BookmarkProvider>
+              <AppWrapper>
+                <AnimatedBackground>
+                  <BackgroundGradient
+                    animate={{
+                      background: [
+                        'radial-gradient(circle at 20% 20%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
+                        'radial-gradient(circle at 80% 80%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
+                        'radial-gradient(circle at 80% 20%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
+                        'radial-gradient(circle at 20% 80%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
+                        'radial-gradient(circle at 20% 20%, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 20, 1) 70%)',
+                      ],
+                    }}
+                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                  />
+                  
+                  {/* Floating orbs in the background */}
+                  <FloatingOrb
+                    color={theme.colors.primary}
+                    style={{ width: '500px', height: '500px', top: '10%', left: '15%' }}
+                    animate={{
+                      x: [0, 40, -40, 0],
+                      y: [0, 60, 30, 0],
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  
+                  <FloatingOrb
+                    color={theme.colors.accent}
+                    style={{ width: '400px', height: '400px', bottom: '10%', right: '15%' }}
+                    animate={{
+                      x: [0, -50, 50, 0],
+                      y: [0, -30, -60, 0],
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  
+                  <FloatingOrb
+                    color={theme.colors.secondary}
+                    style={{ width: '300px', height: '300px', top: '40%', right: '30%' }}
+                    animate={{
+                      x: [0, 60, -30, 0],
+                      y: [0, -40, 40, 0],
+                    }}
+                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </AnimatedBackground>
                 
-                {/* Floating orbs in the background */}
-                <FloatingOrb
-                  color={theme.colors.primary}
-                  style={{ width: '500px', height: '500px', top: '10%', left: '15%' }}
-                  animate={{
-                    x: [0, 40, -40, 0],
-                    y: [0, 60, 30, 0],
-                  }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-                />
-                
-                <FloatingOrb
-                  color={theme.colors.accent}
-                  style={{ width: '400px', height: '400px', bottom: '10%', right: '15%' }}
-                  animate={{
-                    x: [0, -50, 50, 0],
-                    y: [0, -30, -60, 0],
-                  }}
-                  transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-                />
-                
-                <FloatingOrb
-                  color={theme.colors.secondary}
-                  style={{ width: '300px', height: '300px', top: '40%', right: '30%' }}
-                  animate={{
-                    x: [0, 60, -30, 0],
-                    y: [0, -40, 40, 0],
-                  }}
-                  transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </AnimatedBackground>
-              
-              <Router>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Navbar />
-                </motion.div>
-                
-                <ContentWrapper
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <AnimatePresence mode="wait">
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/categories" element={<Categories />} />
-                      <Route path="/categories/:slug" element={<Categories />} />
-                      <Route path="/recipe/:id" element={<RecipePage />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/bookmarks" element={<Bookmarks />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/community" element={<Community />} />
-                      <Route path="/messages" element={<Messages />} />
-                      <Route path="/messages/:userId" element={<Messages />} />
-                      <Route path="/community/profile/:userId" element={<Profile />} />
-                    </Routes>
-                  </AnimatePresence>
-                </ContentWrapper>
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                >
-                  <Footer />
-                </motion.div>
-              </Router>
-            </AppWrapper>
+                <Router>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Navbar />
+                  </motion.div>
+                  
+                  <ContentWrapper
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    <AnimatePresence mode="wait">
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/categories" element={<Categories />} />
+                        <Route path="/categories/:slug" element={<Categories />} />
+                        <Route path="/recipe/:id" element={<RecipePage />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/bookmarks" element={<Bookmarks />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/community" element={<Community />} />
+                        <Route path="/messages" element={<Messages />} />
+                        <Route path="/messages/:userId" element={<Messages />} />
+                        <Route path="/community/profile/:userId" element={<Profile />} />
+                      </Routes>
+                    </AnimatePresence>
+                  </ContentWrapper>
+                  
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                  >
+                    <Footer />
+                  </motion.div>
+                </Router>
+              </AppWrapper>
+            </BookmarkProvider>
           </MessagingProvider>
         </UserProvider>
       </RecipeProvider>

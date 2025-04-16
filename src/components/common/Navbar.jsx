@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BiMenu, BiX, BiSearch, BiUser, BiBookmark } from 'react-icons/bi';
 import SearchBar from './SearchBar';
 import { useRecipeContext } from '../../context/RecipeContext';
+import { useBookmarkContext } from '../../context/BookmarkContext';
 import { buttonHover } from '../../styles/Animations';
 
 const NavbarContainer = styled(motion.nav)`
@@ -260,8 +261,10 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   
   const { allRecipes } = useRecipeContext();
+  const { bookmarkCount } = useBookmarkContext();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -299,7 +302,7 @@ const Navbar = () => {
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             />
-            <span>Future Flavors</span>
+            <span>CuisineX</span>
           </Logo>
           
           <NavMenu>
@@ -366,15 +369,18 @@ const Navbar = () => {
               whileHover="hover"
               whileTap="tap"
               initial="rest"
+              onClick={() => navigate('/bookmarks')}
             >
               <BiBookmark />
-              <NotificationBadge
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 500 }}
-              >
-                3
-              </NotificationBadge>
+              {bookmarkCount > 0 && (
+                <NotificationBadge
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500 }}
+                >
+                  {bookmarkCount}
+                </NotificationBadge>
+              )}
             </SavedButton>
             
             <ProfileButton 
@@ -382,6 +388,7 @@ const Navbar = () => {
               whileHover="hover"
               whileTap="tap"
               initial="rest"
+              onClick={() => navigate('/profile')}
             >
               <BiUser />
             </ProfileButton>
@@ -417,7 +424,7 @@ const Navbar = () => {
             >
               <MobileMenuHeader>
                 <Logo to="/">
-                  <span>Future Flavors</span>
+                  <span>CuisineX</span>
                 </Logo>
                 <MobileMenuClose onClick={() => setIsMobileMenuOpen(false)}>
                   <BiX />
@@ -425,7 +432,7 @@ const Navbar = () => {
               </MobileMenuHeader>
               
               <MobileMenuList>
-                {["Home", "Categories", "Community", "Messages", "About"].map((item, i) => (
+                {["Home", "Categories", "Community", "Messages", "About", "Bookmarks", "Profile"].map((item, i) => (
                   <MobileMenuItem
                     key={item}
                     initial={{ opacity: 0, x: 50 }}
